@@ -1,0 +1,13 @@
+.DS_Store
+
+# Python caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Local simulation outputs (generated inside new_ver volume mount)
+new_ver/sim_results/
+new_ver/test/
+

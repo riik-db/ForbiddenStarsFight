@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+  app:
+    build: .
+    working_dir: /app
+    volumes:
+      - ./new_ver:/app
+    command: tail -f /dev/null
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=mydb
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: mydb
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data_test:/var/lib/postgresql/data
+      - ./init.sql.gz:/docker-entrypoint-initdb.d/init.sql.gz
+
+  metabase:
+    image: metabase/metabase
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./metabase_test.db:/metabase-data/metabase.db
+    environment:
+      MB_DB_FILE: /metabase-data/metabase.db
+    depends_on:
+      - db
+
+volumes:
+  db_data_test:
